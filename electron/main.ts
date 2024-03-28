@@ -1,5 +1,6 @@
 import {
   Tray,
+  dialog,
   Menu,
   nativeImage,
   BrowserView,
@@ -37,15 +38,17 @@ function createTiddlyWikiWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    width: 900,
-    height: 600,
-    frame: false,
+    width: 1200,
+    height: 800,
+    // frame: true,
     icon,
     // titleBarStyle: 'hidden',
-    autoHideMenuBar: true,
+    // autoHideMenuBar: true,
     center: true,
+    useContentSize: true,
     resizable: true,
-    fullscreen: true,
+    // alwaysOnTop: true,
+    // fullscreen: true,
     titleBarOverlay: {
       color: '#2f3241',
       symbolColor: '#74b1be',
@@ -60,6 +63,7 @@ function createTiddlyWikiWindow() {
   view.webContents.on('did-finish-load', () => {
     // 在网页加载完成后执行插入操作
     console.log('网页加载完成，可以执行插入操作了。');
+    // win.webContents?.openDevTools();
   });
 
   // view.webContents.on('before-input-event', (event: Event, input: Input) => {});
@@ -84,7 +88,7 @@ function createTiddlyWikiWindow() {
     win.isVisible() ? win.hide() : win.show();
   });
 
-  // 监听窗口大小变化
+  // // 监听窗口大小变化
   win.on('resize', () => {
     const bounds = win.getBounds();
     view.setBounds({ x: 0, y: 0, width: bounds.width, height: bounds.height });
