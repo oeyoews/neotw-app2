@@ -41,7 +41,11 @@ function createTiddlyWikiWindow() {
     height: 600,
     frame: false,
     icon,
-    titleBarStyle: 'hidden',
+    // titleBarStyle: 'hidden',
+    autoHideMenuBar: true,
+    center: true,
+    resizable: true,
+    fullscreen: true,
     titleBarOverlay: {
       color: '#2f3241',
       symbolColor: '#74b1be',
