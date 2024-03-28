@@ -31,7 +31,7 @@ jobs:
         run: pnpm install
 
       - name: Build Page
-        run: pnpm build
+        run: pnpm build:win && pnpm build:mac && pnpm build:linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

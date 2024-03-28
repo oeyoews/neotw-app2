@@ -4,7 +4,9 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build && electron-builder",
+    "build:win": "vue-tsc && vite build && electron-builder",
+    "build:mac": "electron-builder build --mac",
+    "build:linux": "electron-builder build --linux",
     "preview": "vite preview"
   },
   "dependencies": {
