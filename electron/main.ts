@@ -1,6 +1,8 @@
 import {
   Tray,
   dialog,
+  MenuItem,
+  pushNotifications,
   Menu,
   nativeImage,
   BrowserView,
@@ -37,13 +39,14 @@ function createTiddlyWikiWindow() {
     // show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      spellcheck: true,
     },
     width: 1200,
     height: 800,
     // frame: true,
     icon,
-    // titleBarStyle: 'hidden',
-    // autoHideMenuBar: true,
+    titleBarStyle: 'customButtonsOnHover',
+    autoHideMenuBar: true,
     center: true,
     useContentSize: true,
     resizable: true,
@@ -62,21 +65,28 @@ function createTiddlyWikiWindow() {
   view.setBounds({ x: 0, y: 0, width, height });
   view.webContents.on('did-finish-load', () => {
     // 在网页加载完成后执行插入操作
-    console.log('网页加载完成，可以执行插入操作了。');
-    // win.webContents?.openDevTools();
+    // view.webContents.openDevTools({ mode: 'right' });
+    // win.webContents.openDevTools({ mode: 'right' });
+    // view.webContents.focus(); // 修复光标问题
   });
-
-  // view.webContents.on('before-input-event', (event: Event, input: Input) => {});
-
+  // app.commandLine.appendSwitch('--disable-web-security');
   view.webContents.loadURL(baseurl); // win.loadurl 无法使用 tiddlywiki 内的快捷键
+  // view.webContents.addListener('did-create-window', () => {
+  //   console.log('cre');
+  // });
 
   // tray
   tray = new Tray(icon);
+
+  win.addListener('focus', () => {
+    view.webContents.focus();
+  });
+
   const contextMenu = Menu.buildFromTemplate([
     {
       label: '关闭',
       type: 'normal',
-      click: () => win.close(),
+      click: () => win.destroy(),
       // icon
     },
   ]);
@@ -92,6 +102,21 @@ function createTiddlyWikiWindow() {
   win.on('resize', () => {
     const bounds = win.getBounds();
     view.setBounds({ x: 0, y: 0, width: bounds.width, height: bounds.height });
+  });
+
+  win.on('close', (e) => {
+    e.preventDefault();
+
+    const res = dialog.showMessageBoxSync({
+      type: 'warning',
+      message: '确定要退出吗？',
+      buttons: ['确定', '取消'],
+      cancelId: 1,
+    });
+
+    if (res === 0) {
+      win.destroy();
+    }
   });
 }
 
@@ -115,4 +140,17 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createTiddlyWikiWindow();
   }
+});
+
+// security
+// app.commandLine.appendSwitch('content', 'true');
+
+// 拦截 确认提示框
+// 使用 dialog 代替
+app.on('web-contents-created', (_, contents) => {
+  contents.on('before-input-event', (_, input) => {
+    if (input.type === 'keyDown' && input.key === 'Enter') {
+      // input.preventDefault();
+    }
+  });
 });
