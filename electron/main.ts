@@ -1,14 +1,14 @@
 import {
+  ipcMain,
   Tray,
   dialog,
-  // MenuItem,
-  // pushNotifications,
   Menu,
   nativeImage,
   BrowserView,
   app,
   BrowserWindow,
 } from 'electron';
+
 import path from 'node:path';
 
 // The built directory structure
@@ -64,11 +64,10 @@ function createTiddlyWikiWindow() {
   const { width, height } = win.getBounds();
   view.setBounds({ x: 0, y: 0, width, height });
   view.webContents.on('did-finish-load', () => {
-    // 在网页加载完成后执行插入操作
-    // view.webContents.openDevTools({ mode: 'right' });
-    // win.webContents.openDevTools({ mode: 'right' });
-    // view.webContents.focus(); // 修复光标问题
+    view.webContents.openDevTools({ mode: 'right' });
+    view.webContents.focus(); // 修复光标问题
   });
+
   // app.commandLine.appendSwitch('--disable-web-security');
   view.webContents.loadURL(baseurl); // win.loadurl 无法使用 tiddlywiki 内的快捷键
   // view.webContents.addListener('did-create-window', () => {
