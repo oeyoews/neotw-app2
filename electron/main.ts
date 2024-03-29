@@ -1,5 +1,4 @@
 import {
-  ipcMain,
   Tray,
   dialog,
   Menu,
