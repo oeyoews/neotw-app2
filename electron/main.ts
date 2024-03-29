@@ -1,8 +1,8 @@
 import {
   Tray,
   dialog,
-  MenuItem,
-  pushNotifications,
+  // MenuItem,
+  // pushNotifications,
   Menu,
   nativeImage,
   BrowserView,
